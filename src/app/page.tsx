@@ -1,36 +1,33 @@
-"use client"
-import { useState, ChangeEvent } from "react";
-import ShiftDataInput from "./components/ShiftDataInput";
-import { ShiftData } from "@/types/index";
+"use client";
 
-const initialShiftData : ShiftData = {
-  people: 0,
-  totalTips: 0,
-  hourlyWage: 0.00,
-  hoursWorked: 0
-}
+// Components
+import ShiftDataInput from "./components/ShiftDataInput";
+import InputsContainer from "./components/InputsContainer";
+import CalculationsContainer from "./components/CalculationsContainer";
+
+// Hooks
+import useShiftData from "./hooks/useShiftData";
 
 export default function Home() {
-  const [shiftData, setShiftData] = useState<ShiftData>(initialShiftData);
-
-  const handleInputChange = (event: ChangeEvent<HTMLInputElement>, dataName:string) : void => {
-    console.log("input for ", dataName, " changed")
-    setShiftData((prev) => ({... prev, [dataName]: event.target.value}))
-  }; 
+  const { shiftSummary, handleShiftDataChange } = useShiftData();
 
   return (
-    <div className="h-[100vh] table w-full">
-      <div className="h-[calc(100vh-50px)]">
-        <main className="flex flex-col p-3">
-          <ShiftDataInput value={shiftData.people} labelText={"People"} onInputChange={(event) => handleInputChange(event, "people")} />
-          <ShiftDataInput value={shiftData.totalTips} labelText={"Tips"} onInputChange={(event) => handleInputChange(event, "totalTips")} />
-          <ShiftDataInput value={shiftData.hourlyWage} labelText={"Hourly wage"} onInputChange={(event) => handleInputChange(event, "hourlyWage")} />
-          <ShiftDataInput value={shiftData.hoursWorked} labelText={"Hours Worked"} onInputChange={(event) => handleInputChange(event, "hoursWorked")} />
+    <div className="h-screen table w-full">
+      <div className="h-100">
+        <main className="container px-5 py-24 mx-auto flex flex-wrap">
+          <InputsContainer>
+            {Object.keys(shiftSummary).map((key: string) => 
+                <ShiftDataInput
+                  key={key}
+                  data={shiftSummary[key]}
+                  onInputChange={(event) => handleShiftDataChange(event, shiftSummary[key].name)}
+                />    
+              )}
+          </InputsContainer>
+
+          <CalculationsContainer />
         </main>
       </div>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center h-[50px]">
-        <h1> Footer </h1>
-      </footer>
     </div>
   );
 }

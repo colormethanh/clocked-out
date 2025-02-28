@@ -1,18 +1,27 @@
 import { ChangeEvent } from "react";
 
+// Types
+export interface ShiftField {value: number, displayName: string, name: string, isFloat: boolean}
 
 
+export interface ShiftSummary {
+  people: ShiftData;
+  totalTips: ShiftData;
+  hourlyWage: ShiftData;
+  hoursWorked: ShiftData;
+  [key: string]: ShiftData;
+}
 
-export interface ShiftData {
-  people: number;
-  totalTips: number;
-  hourlyWage: number;
-  hoursWorked: number;
+export interface ShiftDataCalculations {
+  takeHomeTips: number,
+  hourlyRate: number,
+  daysHourlyRate: number,
+  takeHomeTotal: number
 }
 
 
+// Props Definition
 export interface ShiftDataInputProps {
-  value: number;
+  data: ShiftData;
   onInputChange: (event: ChangeEvent<HTMLInputElement>) => void;
-  labelText: string;
 }
