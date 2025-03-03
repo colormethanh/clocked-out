@@ -2,21 +2,24 @@ import { ChangeEvent } from "react";
 
 // Types
 export interface ShiftField {value: number, displayName: string, name: string, isFloat: boolean}
-
+export interface Calculation { value:number, displayName: string, description: string, prefix: string, suffix: string }
 
 export interface ShiftSummary {
-  people: ShiftData;
-  totalTips: ShiftData;
-  hourlyWage: ShiftData;
-  hoursWorked: ShiftData;
-  [key: string]: ShiftData;
+  people: ShiftField;
+  yourTotalTips: ShiftField;
+  yourNetSales: ShiftField;
+  totalTips: ShiftField;
+  hourlyWage: ShiftField;
+  hoursWorked: ShiftField;
+  [key: string]: ShiftField;
 }
 
 export interface ShiftDataCalculations {
-  takeHomeTips: number,
-  hourlyRate: number,
-  daysHourlyRate: number,
-  takeHomeTotal: number
+  takeHomeTips: Calculation;
+  cumulativeHourlyRate: Calculation;
+  takeHomeTotal: Calculation;
+  [key: string]: Calculation;
+
 }
 
 
@@ -24,4 +27,8 @@ export interface ShiftDataCalculations {
 export interface ShiftDataInputProps {
   data: ShiftData;
   onInputChange: (event: ChangeEvent<HTMLInputElement>) => void;
+}
+
+export interface ShiftCalculationProp {
+  calculation: Calculation
 }
