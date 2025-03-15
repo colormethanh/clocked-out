@@ -1,5 +1,5 @@
 "useClient";
-import { ChangeEvent, useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 // Types
 import { ShiftSummary, ShiftDataCalculations } from "@/types/index";
@@ -10,36 +10,48 @@ const initialShiftData: ShiftSummary = {
     displayName: "People On Shift",
     name: "people",
     isFloat: false,
-  },
-  yourTotalTips: {
-    value: 0,
-    displayName: "Your Total Tips",
-    name: "yourTotalTips",
-    isFloat: true,
-  },
-  yourNetSales: {
-    value: 0,
-    displayName: "Your Net Sales",
-    name: "yourNetSales",
-    isFloat: true,
+    fieldType: "range",
+    maxValue: 10,
   },
   totalTips: {
-    value: 0,
-    displayName: "Total Tips",
+    value: 0.00,
+    displayName: "Shift's Total Tips",
     name: "totalTips",
     isFloat: true,
+    fieldType: "input",
+    maxValue: 1000
   },
   hourlyWage: {
-    value: 0,
-    displayName: "Hourly Wage",
+    value: 0.00,
+    displayName: "Your Hourly Wage",
     name: "hourlyWage",
     isFloat: true,
+    fieldType: "range",
+    maxValue: 100
   },
   hoursWorked: {
     value: 0,
-    displayName: "Hours Worked",
+    displayName: "Your Hours Worked",
     name: "hoursWorked",
     isFloat: true,
+    fieldType: "range",
+    maxValue: 12
+  },
+  yourTotalTips: {
+    value: 0.00,
+    displayName: "Your Total Tips",
+    name: "yourTotalTips",
+    isFloat: true,
+    fieldType: "input",
+    maxValue: 1000
+  },
+  yourNetSales: {
+    value: 0.00,
+    displayName: "Your Net Sales",
+    name: "yourNetSales",
+    isFloat: true,
+    fieldType: "input",
+    maxValue: 1000
   },
 };
 
@@ -51,21 +63,21 @@ const initialCalculations: ShiftDataCalculations = {
     prefix: "$ ",
     suffix: "",
   },
+  cumulativeHourlyRate: {
+    value: 0,
+    displayName: "Cumulative Hourly Rate",
+    description:
+    "Your calculated hourly rate based on how much you made hourly and your take home tips.",
+    prefix: "$ ",
+    suffix: " / HR",
+  },
   yourTipPercentage: {
     value: 0,
     displayName: "You Tip Percentage",
     description: "Your total tips against your total sales",
     prefix: "% ",
     suffix: "",
-  },
-  cumulativeHourlyRate: {
-    value: 0,
-    displayName: "Cumulative Hourly Rate",
-    description:
-      "Your calculated hourly rate based on how much you made hourly and your take home tips.",
-    prefix: "$ ",
-    suffix: " / HR",
-  },
+  }, 
   takeHomeTotal: {
     value: 0,
     displayName: "Take Home Total",
@@ -83,12 +95,12 @@ export default function useShiftData() {
     useState<ShiftDataCalculations>(initialCalculations);
 
   const handleShiftDataChange = (
-    event: ChangeEvent<HTMLInputElement>,
+    value: number,
     dataName: string
   ): void => {
     setShiftSummary((prev) => ({
       ...prev,
-      [dataName]: { ...prev[dataName], value: parseFloat(event.target.value) },
+      [dataName]: { ...prev[dataName], value: value},
     }));
     setCalculations(initialCalculations);
     refreshCalculations();
@@ -99,7 +111,7 @@ export default function useShiftData() {
   }, [shiftSummary]);
 
   const calcTakeHomeTips = useCallback((): number => {
-    return shiftSummary.totalTips.value / shiftSummary.people.value;
+    return Math.floor((shiftSummary.totalTips.value / shiftSummary.people.value) * 100) / 100;
   }, [shiftSummary]);
 
   const calcTakeHomeTotal = useCallback((): number => {
