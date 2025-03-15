@@ -26,7 +26,7 @@ const initialShiftData: ShiftSummary = {
     displayName: "Your Hourly Wage",
     name: "hourlyWage",
     isFloat: true,
-    fieldType: "range",
+    fieldType: "input",
     maxValue: 100
   },
   hoursWorked: {
