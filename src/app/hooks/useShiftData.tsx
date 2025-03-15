@@ -119,13 +119,18 @@ export default function useShiftData() {
   }, [calcHourlyTotal, calcTakeHomeTips]);
 
   const calcCumulativeHourlyRate = useCallback((): number => {
-    return calcTakeHomeTotal() / shiftSummary.hoursWorked.value;
+    return Math.floor((calcTakeHomeTotal() / shiftSummary.hoursWorked.value) * 100) / 100;
   }, [shiftSummary, calcTakeHomeTotal]);
+
+  const calculateTipPercentage = useCallback(() : number => {
+    return Math.floor((shiftSummary.yourTotalTips.value / shiftSummary.yourNetSales.value) * 100); 
+  }, [shiftSummary])
 
   const refreshCalculations = useCallback((): void => {
     const takeHomeTips = calcTakeHomeTips();
     const takeHomeTotal = calcTakeHomeTotal();
     const cumulativeHourlyRate = calcCumulativeHourlyRate();
+    const tipPercentage = calculateTipPercentage();
 
     setCalculations((prev) => ({
       ...prev,
@@ -135,8 +140,9 @@ export default function useShiftData() {
         ...prev.cumulativeHourlyRate,
         value: cumulativeHourlyRate,
       },
+      yourTipPercentage: {...prev.yourTipPercentage, value: tipPercentage}
     }));
-  }, [calcTakeHomeTips, calcTakeHomeTotal, calcCumulativeHourlyRate]);
+  }, [calcTakeHomeTips, calcTakeHomeTotal, calcCumulativeHourlyRate, calculateTipPercentage]);
 
   useEffect(() => {
     refreshCalculations();
