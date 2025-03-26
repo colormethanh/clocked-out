@@ -102,7 +102,6 @@ export default function useShiftData() {
       ...prev,
       [dataName]: { ...prev[dataName], value: value},
     }));
-    setCalculations(initialCalculations);
     refreshCalculations();
   };
 
